@@ -1,0 +1,16 @@
+Package: wyborySmudaWyszynska
+Type: Package
+Title: Widocznosc w internecie kandydatow na prezydenta RP
+Version: 0.1
+Date: 2015-05-02
+Authors@R: c(person("Piotr", "Smuda" , email="piotrsmuda@gmail.com", role = c("aut", "cre")),
+           person("Karolina", "Wyszynska" , email="wyszynskakarolina@gmail.com", role ="aut"))
+Author: Piotr Smuda [aut, cre],
+  Karolina Wyszynska [aut]
+Maintainer: Karolina Wyszynska <wyszynskakarolina@gmail.com>
+Description: Zbiera, analizuje i wizualizuje dane na temat widocznosci w internecie kandydatow na prezydenta RP
+Depends: R (>= 3.1.0)
+License: GLP-2
+LazyData: TRUE
+Imports: streamR, ROAuth, Rfacebook, devtools, XML, rvest, stringi, dplyr, RSQLite, xts, shiny, dygraphs
+Suggests: testthat

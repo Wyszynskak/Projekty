@@ -1,0 +1,18 @@
+{
+    "contents" : "#' Wskaznik wydzwieku tweetow z kandydatami\n#'\n#' Funkcja \\code{wybory_wsk_tw_analiza_wydzwieku} zlicza wydzwiek tweetow z kandydatami.\n#'\n#' @usage\n#' \\code{wybory_wsk_tw_analiza_wydzwieku(okres,wzor,sciezka_odczyt=getwd())}\n#'\n#' @param okres okres, za ktory jest liczony wskaznik; mozliwosci: \"dzien\", \"tydzien\", \"miesiac\"\n#' @param wzor wzor do odczytu plikow odpowiadajacy danemu okresowi; mozliwosci: \"2015-XX-XX\", \"2015-(X|XX)\", \"2015-XX\"\n#' @param sciezka_odczyt sciezka do folderu bazowego z wszystkimi plikami\n#'\n#' @details\n#' Sposob obliczania wskaznika wydzwieku tweetow o kandydatach na Twitterze:\n#'\n#' tutaj opis zakonczony kropka\n#'\n#' @return Zwraca wyliczony wskaznik (24 elementowy wektor) dla danego okresu.\n#'\n#' @examples\n#' wybory_wsk_tw_analiza_wydzwieku(\"dzien\",\"2015-04-14\")\n#' wybory_wsk_tw_analiza_wydzwieku(\"tydzien\",\"2015-14\")\n#' wybory_wsk_tw_analiza_wydzwieku(\"miesiac\",\"2015-04\")\n#'\n#' @author Karolina Wyszynska\n#'\n\nwybory_wsk_tw_analiza_wydzwieku<-function(okres,wzor,sciezka_odczyt=getwd()){\n\n   #wczytujemy imiona kandydatów i ich tokeny\n   kandydaci<-slownik_fb_kandydaci\n   tokeny<-slownik_google_tokeny\n\n   #wczytujemy słownik wydźwięku dla tweetów\n   slownik <- slownik_wydzwieku\n   slownik <- slownik[ ,c(1,5)]\n   slownik[ ,1] <- stri_encode(slownik[ ,1], from=\"UTF8\", to=\"cp1250\")\n   slownik[ ,2] <- slownik[ ,2] + 3\n\n   #zmieniamy scieżkę\n   if(stri_sub(sciezka_odczyt,-1)!=\"/\"){\n      sciezka_odczyt<-paste0(sciezka_odczyt,\"/\")\n   }\n   sciezka_tweety<-paste0(sciezka_odczyt,\"Twitter/tweety/\")\n   pliki_tweety<-list.files(sciezka_tweety,full.names=TRUE)\n\n   tweety <- wsk_tw_pomocnicza(pliki_tweety, okres, wzor)\n   wskaznik <- numeric(length(tokeny))\n\n   #Dla kazdego kandydata\n   for(i in seq_along(tokeny)){\n      #Wyjmujemy zdania z jego nazwiskiem\n      wykryj <- stri_detect(tweety, regex=tokeny[i])\n      if (length(which(wykryj)) == 0){wskaznik[i] = 0;next}\n      analiza <- paste(tweety[which(wykryj)], collapse=\" \")\n      #Zliczamy występujące w nich słowa i robimy ich analizę\n      analiza <- stri_extract_all_words(analiza) %>% unlist() %>% table()\n      wspolne <- intersect(slownik[ ,1], names(analiza))\n      if(length(wspolne)==0){wskaznik[i] = 3;next}\n\n      #Obliczamy wskaźnik\n      wskaznik[i] <- sum(analiza[wspolne] * slownik[slownik[ ,1] %in% wspolne,\n         2]) / sum(analiza[wspolne])\n   }\n\n   names(wskaznik) <- kandydaci\n   wskaznik\n}",
+    "created" : 1430662172936.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3985522197",
+    "id" : "BE9E0365",
+    "lastKnownWriteTime" : 1430662387,
+    "path" : "D:/Dokumenty/studia/8 semestr/R i Big Data/projekt - wybory/pakiet/wyborySmudaWyszynska/R/wybory_wsk_tw_analiza_wydzwieku.R",
+    "project_path" : "R/wybory_wsk_tw_analiza_wydzwieku.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
