@@ -1,0 +1,16 @@
+{
+    "contents" : "#'\n#' Wczytywanie odleglosci z CSV do bazy\n#'\n#' Funkcja \\code{ZCSVDoBazy} zczytuje wektory odleglosci pomiedzy filmami z pliku\n#' CSV do bazy danych\n#'\n#' @usage ZCSVDoBazy(sciezkaDoBazy, sciezkaDoCSV, wczytujCo, nazwaTabeli)\n#'\n#'@param sciezkaDoBazy sciezka do bazy, w ktorej trzymamy informacje o filmach\n#'@param sciezkaDoCSV sciezka do pliku '.csv', w ktyrm tymczasowo przechowujemy dane\n#'@param wczytujCo ile wierszy z pliku chcemy wczytywac na raz\n#'@param nazwaTabeli do jakiej tabeli w bazie chcemy to wczytac (musi miec kolumny)\n#'analogiczne jak tabela ze \\code{DodajTabeleOdleglosci}\n#'\n#'@return\n#'Zwraca wartosc TRUE\n#'\n#'@author Karolina Wyszynska\n#'\n#'@examples\n#'sciezkaDoBazy <- \"BazaFilmow.sql\"\n#'sciezkaDoCSV <- \"PrzechowajOdleglosci.csv\"\n#'ZCSVDoBazy(sciezkaDoBazy, sciezkaDoCSV, wczytujCo=100, \"Odleglosci\")\n#'\n#'@import RSQLite\n\n\n\nZCSVDoBazy <- function(sciezkaDoBazy, sciezkaDoCSV, wczytujCo, nazwaTabeli){\n  #Otwieramy plik z którego bedziemy czytać\n  f <- file(sciezkaDoCSV, \"r\")\n  on.exit(close(f))\n  nazwyKolumn <- c(\"IDFilm1\", \"IDFilm2\", \"dRokProdukcji\", \",dOpisIMDB\",\n                   \"dGatunki\", \"dScenarzysci\", \"dRezyserowie\", \"dKraje\",\n                   \"dAktorzy\", \"dAktorzyGlowni\", \"dAktorzyGwiazdy\",\n                   \"dProducenci\", \"dOcenaIMDB\", \"dOcenaMezczyzniPonizej18\",\n                   \"dOcenaKobietyPonizej18\", \"dOcenaMezczyzni18_29\",\n                   \"dOcenaKobiety18_29\", \"dOcenaMezczyzni30_44\",\n                   \"dOcenaKobiety30_44\", \"dOcenaMezczyzniPowyzej45\",\n                   \"dOcenaKobietyPowyzej45\")\n\n  suma <- 0\n\n  #Wczytujemy co wczytujCo wierszy\n  while(TRUE){\n      try(dane <- read.table(f, head=FALSE, nrow=wczytujCo), silent=TRUE)\n      if(is.null(dane)){break;}\n\n      colnames(dane) <- nazwyKolumn\n\n      #Wstawiamy je do tabeli pomocniczej\n      polaczenie <- dbConnect(SQLite(), sciezkaDoBazy)\n      dbWriteTable(polaczenie, \"pomocnicza\", dane)\n      on.exit({\n        pol <- dbConnect(SQLite(), sciezkaDoBazy)\n        try(dbRemoveTable(pol, \"pomocnicza\"), silent=TRUE)\n        dbDisconnect(pol)\n      }, add=TRUE)\n\n      #Następnie kopiujemy do wybranej tabeli\n      dbSendQuery(polaczenie, paste0(\"INSERT INTO \",  nazwaTabeli, \" SELECT * FROM\n                                      pomocnicza\"))\n      dbRemoveTable(polaczenie, \"pomocnicza\")\n      dbDisconnect(polaczenie)\n\n      suma <- suma + wczytujCo\n      print(suma)\n      dane <- NULL\n  }\n\n  TRUE\n}\n",
+    "created" : 1432157143458.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3805623241",
+    "id" : "8FA050E0",
+    "lastKnownWriteTime" : 1432157150,
+    "path" : "D:/Projekty/IMDB/Nowy pakiet faza 2/WyszynskaRudasIMDB/R/ZCSVdoBazy.R",
+    "project_path" : "R/ZCSVdoBazy.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,9 @@
+import(stringi)
+import(dplyr)
+import(rvest)
+import(RSQLite)
+import(tm)
+import(SnowballC)
+import(tidyr)
+
+exportPattern("^[^\\.]")

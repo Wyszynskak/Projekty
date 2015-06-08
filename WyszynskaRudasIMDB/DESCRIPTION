@@ -1,0 +1,13 @@
+Package: WyszynskaRudasIMDB
+Title: Zbiera informacje o filmach z IMDB
+Version: 0.0.1.0000
+Authors@R: c(person("Karolina", "Wyszynska" , email="wyszynskakarolina@gmail.com", role = c("aut", "cre")),
+           person("Krzysztof", "Rudas" , email="rudask@student.mini.pw.edu.pl", role ="aut"))
+Author: Karolina Wyszynska [aut, cre],
+  Krzysztof Rudas [aut]
+Description: Zbiera informacje o filmach dostepne w serwisie IMDB, buduje stosowna, relacyjna baze danych oraz zapewnia funkcje wstawiajace film do bazy
+Depends: R (>= 3.1.0)
+License: GLP-2
+LazyData: true
+Suggests: testthat, stringi, dplyr, rvest, RSQLite
+Imports: stringi, RMySQL, dplyr, rvest, tidyr, tm, SnowballC

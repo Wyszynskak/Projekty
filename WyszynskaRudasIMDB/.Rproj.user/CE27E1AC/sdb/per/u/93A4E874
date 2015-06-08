@@ -1,0 +1,17 @@
+{
+    "contents" : "library(roxygen2)\nlibrary(testthat)\nlibrary(devtools)\ninstall.packages(\"Rtools\")\n\ndevtools::document()\ndevtools::check()\ndevtools::test()\n#devtools::use_testthat()\ndevtools::build()\ndevtools::install()\n",
+    "created" : 1429656806456.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "1765705376",
+    "id" : "93A4E874",
+    "lastKnownWriteTime" : 240592352,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
